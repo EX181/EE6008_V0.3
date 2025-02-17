@@ -1,6 +1,10 @@
 package com.onlineLibrary.service;
 
 import com.onlineLibrary.DTO.CommentsDTO;
+import com.onlineLibrary.VO.BooksVO;
+import com.onlineLibrary.entity.Comments;
+
+import java.util.List;
 
 public interface BookPageService {
 
@@ -24,4 +28,9 @@ public interface BookPageService {
      * @param averageRating
      */
     void updateRating(Integer bookId, Double averageRating);
+    BooksVO BookQuery(Integer bookId);
+    /**
+     * 更新均分到book表
+     */
+    List<Comments> CommentQuery(Integer bookId);
 }

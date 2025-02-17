@@ -2,10 +2,13 @@ package com.onlineLibrary.service;
 
 import com.onlineLibrary.DTO.BooksDTO;
 import com.onlineLibrary.entity.Books;
+import com.onlineLibrary.entity.Comments;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public interface BookManagementService {
+    @Autowired
 
     /**
      * 新增书籍
@@ -33,4 +36,6 @@ public interface BookManagementService {
      * @return
      */
     void updateBooks(BooksDTO booksDTO);
+
+    List<Books> getallBooks();
 }

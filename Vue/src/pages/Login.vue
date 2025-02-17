@@ -11,11 +11,11 @@
         :model="loginForm"
         :rules="rules"
         @submit.native.prevent="handleLogin"
-        @keyup.enter="handleLogin"
       >
         <el-form-item prop="username">
           <el-input
             v-model="loginForm.username"
+            @keyup.enter="handleLogin"
             placeholder="Username"
             prefix-icon="el-icon-user"
           />
@@ -25,6 +25,7 @@
           <el-input
             v-model="loginForm.password"
             type="password"
+            @keyup.enter="handleLogin"
             placeholder="Password"
             prefix-icon="el-icon-lock"
             show-password
@@ -51,6 +52,9 @@
 <script>
 import { ElMessage } from 'element-plus'
 import { auth } from '@/utils/auth.js'
+import {hashSHA256} from "@/utils/CryptoHelper.js";
+import {ref} from "vue";
+const hashedPassword = ref("");
 
 export default {
   name: 'Login',
@@ -71,34 +75,72 @@ export default {
     }
   },
   methods: {
+    // handleLogin() {
+    //   this.$refs.loginForm.validate((valid) => {
+    //     if (valid) {
+    //       // Default user and admin accounts
+    //       const testUsers = [
+    //         { username: 'admin', password: 'admin123', role: 'admin' },
+    //         { username: 'user', password: 'user123', role: 'user' }
+    //       ];
+    //
+    //       const user = testUsers.find(u => u.username === this.loginForm.username && u.password === this.loginForm.password);
+    //
+    //       if (user) {
+    //         // Login successfully
+    //         ElMessage.success('Login successfully');
+    //         auth.loginstate(); // Update login status
+    //         auth.userInfo = user; // Set user information
+    //         sessionStorage.setItem('userInfo', JSON.stringify(user)); // Store user info in session storage
+    //         if (user.role === 'admin') {
+    //           this.$router.push('/admin/overview');
+    //         } else {
+    //           this.$router.push('/user');
+    //         }
+    //       } else {
+    //         // Login failed
+    //         ElMessage.error('Incorrect username or password');
+    //       }
+    //     }
+    //   })
+    // },
     handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
-          // Default user and admin accounts
-          const testUsers = [
-            { username: 'admin', password: 'admin123', role: 'admin' },
-            { username: 'user', password: 'user123', role: 'user' }
-          ];
-
-          const user = testUsers.find(u => u.username === this.loginForm.username && u.password === this.loginForm.password);
-
-          if (user) {
-            // Login successfully
-            ElMessage.success('Login successfully');
-            auth.loginstate(); // Update login status
-            auth.userInfo = user; // Set user information
-            sessionStorage.setItem('userInfo', JSON.stringify(user)); // Store user info in session storage
-            if (user.role === 'admin') {
-              this.$router.push('/admin/overview');
-            } else {
-              this.$router.push('/user');
+          hashedPassword.value = await hashSHA256(this.loginForm.password);
+          this.axios({
+            url: 'http://localhost:8080/login',
+            method: 'POST',
+            headers: {                            // 请求头
+              "Content-Type": "application/json",
+            },
+            data: {
+              username: this.loginForm.username,
+              password: hashedPassword.value
             }
-          } else {
-            // Login failed
-            ElMessage.error('Incorrect username or password');
-          }
+          }).then(res => {
+            if (res.data.code === 1) {
+              this.$message.success(res.data.msg);
+              if (res.data.data.role === 1|| res.data.data.role === 0) {
+                this.$router.push({path: '/admin/Overview'});
+              } else {
+                this.$router.push({path: '/user'});
+              }
+              // this.$router.push("/");
+              sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+              console.log("Stored userInfo:", sessionStorage.getItem("userInfo"));
+              auth.loginstate()
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
+
+
     },
     resetForm() {
       this.$refs.loginForm.resetFields();

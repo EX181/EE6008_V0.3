@@ -1,13 +1,16 @@
 package com.onlineLibrary.service.impl;
 
 import com.onlineLibrary.DTO.BooksDTO;
+import com.onlineLibrary.controller.admin.BookManagementController;
 import com.onlineLibrary.entity.Books;
+import com.onlineLibrary.entity.Comments;
 import com.onlineLibrary.mapper.BookManagementMapper;
 import com.onlineLibrary.service.BookManagementService;
 import com.onlineLibrary.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,7 +48,7 @@ public class BookManagementServiceImpl implements BookManagementService {
      */
     @Override
     public void deleteBooks(List<Integer> ids) {
-       bookManagementMapper.deletByIds(ids);
+        bookManagementMapper.deletByIds(ids);
     }
 
     /**
@@ -71,5 +74,11 @@ public class BookManagementServiceImpl implements BookManagementService {
         BeanUtils.copyProperties(booksDTO, books);
         //更新数据
         bookManagementMapper.updateBooks(books);
+    }
+
+    @Override
+    public List<Books> getallBooks() {
+
+        return bookManagementMapper.getallBooks();
     }
 }

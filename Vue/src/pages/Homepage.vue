@@ -437,22 +437,25 @@ export default {
   methods: {
     fetchBooks() {
       // Fetch popular books
-      axios.get('http://localhost:8080/api/popular-books') // Make sure this URL is correct
-        .then(response => {
-          this.popularBooks = response.data; // Assuming the returned data is an array of books
-        })
-        .catch(error => {
-          console.error('Failed to fetch popular books:', error);
-        });
+      axios.get('http://localhost:8080/home') // Make sure this URL is correct
+          .then(response => {
+            this.popularBooks = response.data.data.topBooks; // Assuming the returned data is an array of books
+            console.log(response.data);
+            console.log(this.popularBooks);
+            console.log('Fetching book list')
+          })
+          .catch(error => {
+            console.error('Failed to fetch popular books:', error);
+          });
 
       // Fetch new arrivals
-      axios.get('http://localhost:8080/api/new-books') // Replace with the actual backend API address
-        .then(response => {
-          this.newBooks = response.data; // Assuming the returned data is an array of books
-        })
-        .catch(error => {
-          console.error('Failed to fetch new arrivals:', error);
-        });
+      axios.get('http://localhost:8080/home') // Replace with the actual backend API address
+          .then(response => {
+            this.newBooks = response.data.data.newBooks; // Assuming the returned data is an array of books
+          })
+          .catch(error => {
+            console.error('Failed to fetch new arrivals:', error);
+          });
     },
     searchBooks() {
       // Navigate to search results page

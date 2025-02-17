@@ -180,6 +180,8 @@
 <script>
 import { Search, Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import axios from "axios";
+import {auth} from "@/utils/auth.js";
 
 export default {
   name: 'AdminBookManagement',
@@ -192,14 +194,14 @@ export default {
       searchQuery: '',
       filterStatus: '',
       books: [
-        {
-          id: 1,
-          title: 'The Three-Body Problem',
-          author: 'Cixin Liu',
-          isbn: '9787536692930',
-          publishDate: '2008-01-01',
-          available: true
-        }
+        // {
+        //   id: 1,
+        //   title: 'The Three-Body Problem',
+        //   author: 'Cixin Liu',
+        //   isbn: '9787536692930',
+        //   publishDate: '2008-01-01',
+        //   available: true
+        // }
       ],
       currentPage: 1,
       pageSize: 10,
@@ -262,6 +264,8 @@ export default {
     },
     async deleteBook(book) {
       try {
+        const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        const token = userInfo.token
         await ElMessageBox.confirm(
           'Are you sure you want to delete this book?',
           'Warning',
@@ -273,27 +277,126 @@ export default {
         )
         // Call delete API
         // await deleteBookApi(book.id)
-        ElMessage.success('Deleted successfully')
+        this.axios({
+          url: 'http://localhost:8080/admin/book',
+          method: 'DELETE',
+          headers: {
+            // 请求头
+            "token": token,
+            "Content-Type": "application/json",
+          },
+          params: {
+            ids: book.id
+          }
+        }).then(res => {
+          if (res.data.code === 1) {
+            this.$message.success(res.data.msg);
+            ElMessage.success('Deleted successfully')
+            this.fetchBooks()
+            console.log(res)
+            // this.$router.push("/");
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
         // Refresh list
         this.fetchBooks()
       } catch (error) {
         if (error !== 'cancel') {
+          console.log(error)
           ElMessage.error('Failed to delete')
         }
       }
     },
     async submitBookForm() {
       try {
+        const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        const token = userInfo.token
         await this.$refs.bookForm.validate()
         if (this.dialogType === 'add') {
-          // await addBookApi(this.bookForm)
-          ElMessage.success('Added successfully')
+
+          this.axios({
+            url: 'http://localhost:8080/admin/book',
+            method: 'POST',
+            headers: {
+              // 请求头
+              "token": token,
+              "Content-Type": "application/json",
+            },
+            data: {
+              title: this.bookForm.title,
+              author: this.bookForm.author,
+              isbn: this.bookForm.isbn,
+              publishDate: this.bookForm.publishDate,
+              description: this.bookForm.description,
+              cover: this.bookForm.cover,
+            }
+          }).then(res => {
+            if (res.data.code === 1) {
+              this.$message.success(res.data.msg);
+              ElMessage.success('Added successfully')
+              console.log(res)
+              this.fetchBooks()
+              // this.$router.push("/");
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          });
+
         } else {
+
+          this.axios({
+            url: 'http://localhost:8080/admin/book',
+            method: 'PUT',
+            headers: {
+              // 请求头
+              "token": token,
+              "Content-Type": "application/json",
+            },
+            data: {
+              id: this.bookForm.id,
+              title: this.bookForm.title,
+              author: this.bookForm.author,
+              isbn: this.bookForm.isbn,
+              publishDate: this.bookForm.publishDate,
+              description: this.bookForm.description,
+              cover: this.bookForm.cover,
+            }
+          }).then(res => {
+            if (res.data.code === 1) {
+              this.$message.success(res.data.msg);
+              ElMessage.success('Added successfully')
+              console.log(res)
+              this.fetchBooks()
+              // this.$router.push("/");
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          });
+
+
+
+
+
+
+
+
           // await updateBookApi(this.bookForm)
           ElMessage.success('Updated successfully')
         }
         this.dialogVisible = false
-        this.fetchBooks()
       } catch (error) {
         console.error(error)
       }
@@ -322,8 +425,29 @@ export default {
       return isJPG && isLt2M
     },
     fetchBooks() {
-      // Implement logic to fetch book list
-      console.log('Fetching book list')
+      const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+      const token = userInfo.token
+      axios({
+        url: 'http://localhost:8080/admin/book/page', method: "GET", headers: {
+          "token": token,// 请求头
+          "Content-Type": "application/json",
+        },params:
+            {
+              page: this.currentPage,
+              pageSize: this.pageSize,
+        }
+      }) // Make sure this URL is correct
+          .then(response => {
+            console.log(response)
+            this.books = response.data.data.records; // Assuming the returned data is an array of books
+            this.total = response.data.data.total;
+            console.log(response.data.data.records);
+            console.log(this.books);
+
+          })
+          .catch(error => {
+            console.error('Failed to fetch books:', error);
+          })
     },
     showPurchaseRequestsDialog() {
       this.purchaseRequestsDialogVisible = true

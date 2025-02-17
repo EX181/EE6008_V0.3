@@ -1,6 +1,7 @@
 package com.onlineLibrary.service.impl;
 
 import com.onlineLibrary.DTO.CommentsDTO;
+import com.onlineLibrary.VO.BooksVO;
 import com.onlineLibrary.entity.Comments;
 import com.onlineLibrary.mapper.BookPageMapper;
 import com.onlineLibrary.service.BookPageService;
@@ -8,6 +9,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Service
 public class BookPageServiceImpl implements BookPageService {
@@ -54,5 +58,18 @@ public class BookPageServiceImpl implements BookPageService {
     @Override
     public void updateRating(Integer bookId, Double averageRating) {
         bookPageMapper.updateBookRating(bookId,averageRating);
+    }
+    @Override
+    public BooksVO BookQuery(Integer bookId) {
+        BooksVO booksVO = bookPageMapper.select02(bookId);
+
+        return booksVO;
+
+    }
+
+    public List<Comments> CommentQuery(@PathVariable("id") Integer id) {
+        List<Comments> Bookcomments = bookPageMapper.CommentQuery(id);
+
+        return Bookcomments;
     }
 }

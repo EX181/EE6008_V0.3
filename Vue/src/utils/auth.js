@@ -18,11 +18,11 @@ export const auth = reactive({
     isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true',
     userInfo: null,
 
-    loginstate(user) {
-      sessionStorage.setItem('isLoggedIn', 'true')
-      sessionStorage.setItem('userInfo', JSON.stringify(user))
-      this.isLoggedIn = true
-      this.userInfo = user
+    loginstate() {
+        sessionStorage.setItem('isLoggedIn', 'true')
+        this.isLoggedIn = true
+        this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        console.log(this.userInfo)
     },
 
     logoutstate() {

@@ -1,9 +1,12 @@
 package com.onlineLibrary.mapper;
 
+import com.onlineLibrary.VO.BooksVO;
 import com.onlineLibrary.annotation.AutoFill;
 import com.onlineLibrary.entity.Comments;
 import com.onlineLibrary.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface BookPageMapper {
@@ -26,4 +29,8 @@ public interface BookPageMapper {
      * @param averageRating
      */
     void updateBookRating(Integer bookId, Double averageRating);
+
+    BooksVO select02(int id);
+
+    List<Comments> CommentQuery(int id);
 }

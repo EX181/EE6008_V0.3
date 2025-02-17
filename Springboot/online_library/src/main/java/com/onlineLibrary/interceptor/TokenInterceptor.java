@@ -19,6 +19,7 @@ public class TokenInterceptor implements HandlerInterceptor{
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         //获取请求头 token
+        if (request.getMethod().equals("OPTIONS")) {return true;}
         String token = request.getHeader("token");
         System.out.println("token:"+token);
         //判断token是否存在 不存在说明用户未登录 响应401(或者响应超时，请重新登录等)

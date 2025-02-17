@@ -39,7 +39,7 @@ const routes = [
         ],
         beforeEnter: (to, from, next) => {
             const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-            if (userInfo && userInfo.role === 'admin') {
+            if (userInfo &&(userInfo.role === 1||userInfo.role === 0)){
                 next()
             } else {
                 next('/login')

@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
              Map<String,Object> claims = new HashMap<>();
              claims.put("id", user1.getId());
              String jwt = JwtUtils.generateJwt(claims);
-             return new LoginVO(user1.getId(), user1.getUsername(), user1.getName(),jwt);
+             return new LoginVO(user1.getId(), user1.getUsername(), user1.getName(),jwt, user1.getRole());
          }else {
              return null;
          }

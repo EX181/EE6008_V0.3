@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/book")
+@CrossOrigin()
 public class BookManagementController {
 
     @Autowired
@@ -30,6 +32,7 @@ public class BookManagementController {
      * @return
      */
     @GetMapping("/page")
+    @CrossOrigin()
     public Result<PageResult> pageQuery(BooksPageQueryDTO booksPageQueryDTO) {
         PageResult pageResult = homePageService.pageQuery(booksPageQueryDTO);
         return Result.success(pageResult);
@@ -41,7 +44,8 @@ public class BookManagementController {
      * @return
      */
     @PostMapping
-    public Result addAdmin(@RequestBody BooksDTO booksDTO) {
+    @CrossOrigin()
+    public Result addBook(@RequestBody BooksDTO booksDTO) {
         bookManagementService.addbook(booksDTO);
         return Result.success();
     }
@@ -52,6 +56,7 @@ public class BookManagementController {
      * @return
      */
     @DeleteMapping
+    @CrossOrigin()
     public Result deleteBooks(@RequestParam List<Integer> ids) {
         bookManagementService.deleteBooks(ids);
         return Result.success();
@@ -63,6 +68,7 @@ public class BookManagementController {
      * @return
      */
     @GetMapping("/{id}")
+    @CrossOrigin()
     public Result<Books> getById(@PathVariable("id") Integer id) {
         Books books = bookManagementService.getById(id);
         return Result.success(books);
@@ -74,10 +80,15 @@ public class BookManagementController {
      * @return
      */
     @PutMapping
+    @CrossOrigin()
     public Result updateBooks(@RequestBody BooksDTO booksDTO) {
         bookManagementService.updateBooks(booksDTO);
         return Result.success();
     }
-
-
+    @GetMapping("/allbooks")
+    @CrossOrigin()
+    public  Result<List<Books>> getallBooks() {
+        List<Books> allbooks = bookManagementService.getallBooks();
+        return Result.success(allbooks);
+    }
 }

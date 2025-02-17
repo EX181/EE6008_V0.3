@@ -17,9 +17,9 @@
             <if test="isbn != null and isbn !=''">
                 and isbn like concat('%',#{isbn},'%')
             </if>
-            <if test="category != null and category !=''">
-                and category like concat('%',#{category},'%')
-            </if>
+<!--            <if test="category != null and category !=''">-->
+<!--                and category like concat('%',#{category},'%')-->
+<!--            </if>-->
 
         </where>
     </select>

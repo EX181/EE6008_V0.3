@@ -21,4 +21,13 @@
         SET rating = #{averageRating}
         WHERE id = #{bookId}
     </update>
+    <select id="select02" resultType="com.onlineLibrary.VO.BooksVO">
+        select *
+        from book
+        where id = #{bookId}
+    </select>
+
+    <select id="CommentQuery" resultType="com.onlineLibrary.entity.Comments">
+        select * from comments where book_id = #{id}
+    </select>
 </mapper>

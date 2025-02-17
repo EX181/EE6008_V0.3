@@ -2,6 +2,8 @@ package com.onlineLibrary.mapper;
 
 import com.onlineLibrary.entity.Books;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
 
 import java.util.List;
 
@@ -34,4 +36,9 @@ public interface BookManagementMapper {
      * @return
      */
     void updateBooks(Books books);
+
+
+    @Select("SELECT * FROM book;")
+    List<Books> getallBooks();
+
 }

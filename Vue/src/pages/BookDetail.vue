@@ -4,7 +4,7 @@
       <!-- Left side book information -->
       <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
         <el-card class="book-cover-card">
-          <img :src="book.cover" class="book-cover" alt="Book cover" />
+          <img :src="book.cover" class="book-cover" alt="Book cover"/>
           <div class="book-actions">
             <el-button type="primary" :disabled="!book.available" @click="borrowBook">
               {{ book.available ? 'Borrow' : 'Borrowed' }}
@@ -28,13 +28,13 @@
           </template>
           <div class="similar-books-list">
             <div
-              v-for="similarBook in similarBooks"
-              :key="similarBook.id"
-              class="similar-book-item"
-              @click="goToBookDetail(similarBook.id)"
-              style="cursor: pointer;"
+                v-for="similarBook in similarBooks"
+                :key="similarBook.id"
+                class="similar-book-item"
+                @click="goToBookDetail(similarBook.id)"
+                style="cursor: pointer;"
             >
-              <img :src="similarBook.cover" class="similar-book-cover" alt="Similar Book Cover" />
+              <img :src="similarBook.cover" class="similar-book-cover" alt="Similar Book Cover"/>
               <div class="similar-book-info">
                 <p class="similar-book-title">{{ similarBook.title }}</p>
                 <p class="similar-book-author">{{ similarBook.author }}</p>
@@ -81,7 +81,7 @@
           <template #header>
             <div class="comments-header">
               <h3>Comments</h3>
-              <el-button type="primary"  @click="showCommentDialog">
+              <el-button type="primary" @click="showCommentDialog">
                 Write a Comment
               </el-button>
             </div>
@@ -95,7 +95,7 @@
                 <span class="comment-date">{{ comment.date }}</span>
               </div>
               <div class="comment-rating">
-                <el-rate v-model="comment.rating" disabled />
+                <el-rate v-model="comment.rating" disabled/>
               </div>
               <p class="comment-content">{{ comment.content }}</p>
             </div>
@@ -106,20 +106,20 @@
 
     <!-- Comment dialog -->
     <el-dialog
-      v-model="commentDialogVisible"
-      title="Write a Comment"
-      width="50%"
+        v-model="commentDialogVisible"
+        title="Write a Comment"
+        width="50%"
     >
       <el-form :model="newComment" ref="commentForm" :rules="commentRules">
         <el-form-item label="Rating" prop="rating">
-          <el-rate v-model="newComment.rating" />
+          <el-rate v-model="newComment.rating"/>
         </el-form-item>
         <el-form-item label="Comment" prop="content">
           <el-input
-            v-model="newComment.content"
-            type="textarea"
-            :rows="4"
-            placeholder="Please share your thoughts about the book..."
+              v-model="newComment.content"
+              type="textarea"
+              :rows="4"
+              placeholder="Please share your thoughts about the book..."
           />
         </el-form-item>
       </el-form>
@@ -134,29 +134,30 @@
 </template>
 
 <script>
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { auth } from '@/utils/auth.js';
+import {ElMessage, ElMessageBox} from 'element-plus';
+import {auth} from '@/utils/auth.js';
+import axios from "axios";
 
 export default {
   name: 'BookDetail',
   data() {
     return {
       book: {
-        id: 1,
-        title: 'Introduction to Algorithms',
-        author: 'Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein',
-        publisher: 'The MIT Press',
-        isbn: '9780262033848',
-        publishDate: '2000-01-01',
-        category: 'Algorithms',
-        cover: 'https://m.media-amazon.com/images/I/61Mw06x2XcL._AC_UL320_.jpg',
-        rating: 4.5,
-        description: 'A comprehensive introduction to the modern study of computer algorithms. It presents many algorithms and covers them in considerable depth, yet makes their design and analysis accessible to all levels of readers.',
-        location: 'Computer Science Section',
-        callNumber: 'QA76.6.I5858',
-        availableCopies: 3,
-        totalCopies: 5,
-        available: true
+        // id: 1,
+        // title: 'Introduction to Algorithms',
+        // author: 'Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein',
+        // publisher: 'The MIT Press',
+        // isbn: '9780262033848',
+        // publishDate: '2000-01-01',
+        // category: 'Algorithms',
+        // cover: 'https://m.media-amazon.com/images/I/61Mw06x2XcL._AC_UL320_.jpg',
+        // rating: 4.5,
+        // description: 'A comprehensive introduction to the modern study of computer algorithms. It presents many algorithms and covers them in considerable depth, yet makes their design and analysis accessible to all levels of readers.',
+        // location: 'Computer Science Section',
+        // callNumber: 'QA76.6.I5858',
+        // availableCopies: 3,
+        // totalCopies: 5,
+        // available: true
       },
       similarBooks: [
         {
@@ -173,20 +174,20 @@ export default {
         }
       ],
       comments: [
-        {
-          id: 1,
-          username: 'Reader A',
-          date: '2024-03-15',
-          rating: 5,
-          content: 'This book is a must-have for any computer science student. The explanations are clear and detailed.'
-        },
-        {
-          id: 2,
-          username: 'Reader B',
-          date: '2024-03-14',
-          rating: 4,
-          content: 'Great resource for understanding complex algorithms. Highly recommended!'
-        }
+        // {
+        //   id: 1,
+        //   username: 'Reader A',
+        //   date: '2024-03-15',
+        //   rating: 5,
+        //   content: 'This book is a must-have for any computer science student. The explanations are clear and detailed.'
+        // },
+        // {
+        //   id: 2,
+        //   username: 'Reader B',
+        //   date: '2024-03-14',
+        //   rating: 4,
+        //   content: 'Great resource for understanding complex algorithms. Highly recommended!'
+        // }
       ],
       commentDialogVisible: false,
       newComment: {
@@ -195,14 +196,20 @@ export default {
       },
       commentRules: {
         rating: [
-          { required: true, message: 'Please provide a rating', trigger: 'change' }
+          {required: true, message: 'Please provide a rating', trigger: 'change'}
         ],
         content: [
-          { required: true, message: 'Please enter your comment', trigger: 'blur' },
-          { min: 10, message: 'Comment must be at least 10 characters', trigger: 'blur' }
+          {required: true, message: 'Please enter your comment', trigger: 'blur'},
+          {min: 10, message: 'Comment must be at least 10 characters', trigger: 'blur'}
         ]
       }
     };
+  },
+  created() {
+    // Add API call to fetch book details here
+    const bookId = this.$route.params.id;
+    this.fetchBookDetails(bookId)
+    this.fetchCommentDetails(bookId)
   },
   methods: {
     async borrowBook() {
@@ -214,13 +221,13 @@ export default {
 
       try {
         await ElMessageBox.confirm(
-          'Are you sure you want to borrow this book?',
-          'Borrow Confirmation',
-          {
-            confirmButtonText: 'Confirm',
-            cancelButtonText: 'Cancel',
-            type: 'info'
-          }
+            'Are you sure you want to borrow this book?',
+            'Borrow Confirmation',
+            {
+              confirmButtonText: 'Confirm',
+              cancelButtonText: 'Cancel',
+              type: 'info'
+            }
         );
         // 这里添加借阅的API调用
         ElMessage.success('Borrowed successfully');
@@ -247,26 +254,91 @@ export default {
       }
       this.commentDialogVisible = true;
     },
+    //   submitComment() {
+    //     this.$refs.commentForm.validate((valid) => {
+    //       if (valid) {
+    //         // Add API call to submit the comment here
+    //         ElMessage.success('Comment submitted successfully');
+    //         this.commentDialogVisible = false;
+    //         this.newComment = {
+    //           rating: 0,
+    //           content: ''
+    //         };
+    //       }
+    //     });
+    //   }
+    // },
     submitComment() {
-      this.$refs.commentForm.validate((valid) => {
+      if (!auth.isLoggedIn) {
+        ElMessage.warning('Please log in first')
+        this.$router.push('/login')
+        return
+      }
+      this.$refs.commentForm.validate(async (valid) => {
+
         if (valid) {
+          const bookId = this.$route.params.id
+          const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+          const token = userInfo.token
+          console.log(userInfo)
+          console.log(userInfo.id)
+          console.log(token)
+          await this.axios({
+            url: `http://localhost:8080/book/Submitcomment/${bookId}`,
+            method: 'POST',
+            headers: {
+              "token": token,// 请求头
+              "Content-Type": "application/json",
+
+            },
+            data: {
+              bookId: bookId,
+              content: this.newComment.content,
+              rating: this.newComment.rating,
+              create_User: userInfo.id,
+              update_User: userInfo.id,
+
+
+            }
+          })
+          console.log(token)
+
+          this.fetchBookDetails(bookId)
+          this.fetchCommentDetails(bookId)
           // Add API call to submit the comment here
-          ElMessage.success('Comment submitted successfully');
-          this.commentDialogVisible = false;
+          ElMessage.success('Comment submitted successfully')
+          this.commentDialogVisible = false
           this.newComment = {
             rating: 0,
             content: ''
-          };
+          }
         }
-      });
+      })
+    },
+    fetchBookDetails(bookId) {
+      axios.get(`http://localhost:8080/book/id/${bookId}`) // Make sure this URL is correct
+          .then(response => {
+            this.book = response.data; // Assuming the returned data is an array of books
+          })
+          .catch(error => {
+            console.error('Failed to books:', error);
+          });
+
+    },
+    fetchCommentDetails(bookId) {
+      axios.get(`http://localhost:8080/book/comment/${bookId}`) // Make sure this URL is correct
+          .then(response => {
+            this.comments = response.data; // Assuming the returned data is an array of books
+          })
+          .catch(error => {
+            console.error('Failed to books:', error);
+          });
+
     }
-  },
-  created() {
-    // Add API call to fetch book details here
-    const bookId = this.$route.params.id;
-    // fetchBookDetails(bookId);
   }
-};
+}
+
+
 </script>
 
 <style scoped>
@@ -558,8 +630,14 @@ export default {
 }
 
 @keyframes slideInUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes fadeInUp {
